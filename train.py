@@ -73,37 +73,8 @@ def main(args):
     datasets = load_from_disk(data_args.dataset_name)
 
     # load pre-processed dataset if using qtype
-    if data_args.qtype:
-        # do not need to read here
-        # 열심히 구현했는데 결과가 그닥 좋지 않아 남겨둔 구질구질한 미련임
-        new_train_path='../data/new_train_dataset.bin'
-        new_valid_path='../data/new_valid_dataset.bin'
-
-        if os.path.isfile(new_train_path) and os.path.isfile(new_valid_path):
-            print("Loading New Train data with qtype")
-            with open(new_train_path, "rb") as file:
-                datasets["train"] = pickle.load(file)
-
-            print("Loading New Valid data with qtype")
-            with open(new_valid_path, "rb") as file:
-                datasets["validation"] = pickle.load(file)
-
-        else:
-            print("Making New Train data")
-            datasets["train"] = preprocess_dataset(datasets["train"], data_args.qtype, True)  #True for training, False for inference
-            datasets["validation"] = preprocess_dataset(datasets["validation"], data_args.qtype, True)
-
-            with open(new_train_path, "wb") as file:
-                pickle.dump(datasets["train"], file)
-
-            with open(new_valid_path, "wb") as file:
-                pickle.dump(datasets["validation"], file)
-
-    else:
-        # 데이터 context 전처리만 시행
-        # 여기만 봐도 무방
-        datasets["train"] = preprocess_dataset(datasets["train"])
-        datasets["validation"] = preprocess_dataset(datasets["validation"])
+    datasets["train"] = preprocess_dataset(datasets["train"])
+    datasets["validation"] = preprocess_dataset(datasets["validation"])
 
     print(datasets)
     print(datasets["train"][0])
